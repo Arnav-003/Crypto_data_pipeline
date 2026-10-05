@@ -1,0 +1,34 @@
+name: Automated Crypto Ingestion Pipeline
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Automatically executes at the start of every hour
+  workflow_dispatch: # Enables a manual "Run workflow" trigger button in the UI
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Initialize Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install Project Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Inject GCP Credential File
+        # Re-creates the hidden credentials file inside the cloud runner machine dynamically
+        run: |
+          mkdir -p .secrets
+          echo '${{ secrets.GCP_CREDENTIALS_JSON }}' > .secrets/gcp-key.json
+
+      - name: Run Ingestion Script
+        env:
+          # Injects the variable your script's background Google library looks for
+          GOOGLE_APPLICATION_CREDENTIALS: .secrets/gcp-key.json
+        run: python src/ingest_crypto.py
