@@ -1,0 +1,7 @@
+version: 2
+
+sources:
+  - name: crypto_raw
+    database: crypto-data-pipeline-510709  # Your exact BigQuery Project ID
+    tables:
+      - name: raw_prices
