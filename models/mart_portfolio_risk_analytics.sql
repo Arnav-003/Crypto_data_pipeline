@@ -10,7 +10,7 @@ totals as (
         sum(market_cap) as total_market_cap,
         sum(total_volume) as total_market_volume
     from analytics
-    group by 1
+    group by price_checked_at --Clean grouping
 )
 
 select
