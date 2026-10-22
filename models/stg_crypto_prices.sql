@@ -3,7 +3,7 @@ select
     id as asset_id,
     name as asset_name,
     symbol as asset_symbol,
-    cast(price_checked_at as timestamp) as price_checked_at,
+    timestamp_trunc(cast(price_checked_at as timestamp), minute) as price_checked_at, --TRUNCATE TO MINUTE
     cast(price_usd as float64) as price_usd,
     cast(market_cap as float64) as market_cap,
     cast(total_volume as float64) as total_volume,
